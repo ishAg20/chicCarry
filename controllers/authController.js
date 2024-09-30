@@ -2,7 +2,7 @@ const userModel = require("../models/user-model");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
 
-exports.registerUser = async (req, res) => {
+module.exports.registerUser = async (req, res) => {
   try {
     let { email, fullname, password } = req.body;
     const user = await userModel.findOne({ email });
@@ -32,4 +32,16 @@ exports.registerUser = async (req, res) => {
   } catch (err) {
     res.status(500).send(err.message);
   }
+};
+
+module.exports.loggedInUser = async (req, res) => {
+  let { email, password } = req.body;
+  const user = await userModel.findOne({ email });
+  if (!user) return res.status(401).send("Incorrect password or email");
+  bcrypt.compare(password, user.password, (err, result) => {
+    if (!result) return res.status(401).send("Incorrect password or email");
+    let token = generateToken(user);
+    res.cookie("token", token, { httpOnly: true });
+    res.status(201).json({ message: "Logged In " });
+  });
 };
