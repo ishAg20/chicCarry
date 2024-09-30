@@ -3,6 +3,7 @@ const app = express();
 const ownerRouter = require("./routes/ownerRouter");
 const usersRouter = require("./routes/usersRouter");
 const productsRouter = require("./routes/productsRouter");
+const index = require("./routes/index");
 
 const cookieParser = require("cookie-parser");
 const path = require("path");
@@ -13,7 +14,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
+require("dotenv").config();
 
+app.use("/", index);
 app.use("/owner", ownerRouter);
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
