@@ -7,9 +7,7 @@ module.exports.registerUser = async (req, res) => {
     let { email, fullname, password } = req.body;
     const user = await userModel.findOne({ email });
     if (user) {
-      console.log("Attempting to register user:", { email, fullname });
       req.flash("error", "User already exists. Login!");
-      console.log("Error flash message set, redirecting...");
       return res.redirect("/");
     }
     bcrypt.genSalt(10, (err, salt) => {
