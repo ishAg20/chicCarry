@@ -4,6 +4,8 @@ const ownerRouter = require("./routes/ownerRouter");
 const usersRouter = require("./routes/usersRouter");
 const productsRouter = require("./routes/productsRouter");
 const index = require("./routes/index");
+const expressSession = require("express-session");
+const flash = require("connect-flash");
 
 const cookieParser = require("cookie-parser");
 const path = require("path");
@@ -20,5 +22,13 @@ app.use("/", index);
 app.use("/owner", ownerRouter);
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
+app.use(
+  expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.EXPRESS_SESSION_SECRET,
+  })
+);
+app.use(flash());
 
 app.listen(3000);
