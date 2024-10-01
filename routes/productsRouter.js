@@ -18,4 +18,9 @@ router.post("/create", upload.single("image"), async (req, res) => {
   res.redirect("/owner/admin");
 });
 
+router.post("/delete", async (req, res) => {
+  let result = await productModel.deleteMany({});
+  res.redirect("/owner/admin");
+});
+
 module.exports = router;
