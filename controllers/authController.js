@@ -6,7 +6,12 @@ module.exports.registerUser = async (req, res) => {
   try {
     let { email, fullname, password } = req.body;
     const user = await userModel.findOne({ email });
-    if (user) return res.status(401).send("User already exists");
+    if (user) {
+      console.log("Attempting to register user:", { email, fullname });
+      req.flash("error", "User already exists. Login!");
+      console.log("Error flash message set, redirecting...");
+      return res.redirect("/");
+    }
     bcrypt.genSalt(10, (err, salt) => {
       if (err) {
         return res.status(500).send(err.message);
@@ -23,9 +28,11 @@ module.exports.registerUser = async (req, res) => {
           });
           let token = generateToken(user);
           res.cookie("token", token, { httpOnly: true });
-          res.status(201).json({ message: "User registered successfully" });
+          req.flash("success", "User registered successfully");
+          res.redirect("/");
         } catch (err) {
-          res.status(500).send(err.message);
+          req.flash("error", "An error occurred during registration.");
+          res.redirect("/");
         }
       });
     });
@@ -37,11 +44,23 @@ module.exports.registerUser = async (req, res) => {
 module.exports.loggedInUser = async (req, res) => {
   let { email, password } = req.body;
   const user = await userModel.findOne({ email });
-  if (!user) return res.status(401).send("Incorrect password or email");
+  if (!user) {
+    req.flash("error", "Incorrect password or email");
+    return res.redirect("/");
+  }
   bcrypt.compare(password, user.password, (err, result) => {
-    if (!result) return res.status(401).send("Incorrect password or email");
+    if (!result) {
+      req.flash("error", "Incorrect password or email");
+      return res.redirect("/");
+    }
     let token = generateToken(user);
     res.cookie("token", token, { httpOnly: true });
-    res.status(201).json({ message: "Logged In " });
+    res.redirect("/shop");
   });
+};
+
+module.exports.loggedOut = (req, res) => {
+  res.clearCookie("token");
+  req.flash("success", "Logged out successfully");
+  res.redirect("/");
 };

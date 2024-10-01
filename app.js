@@ -6,22 +6,21 @@ const productsRouter = require("./routes/productsRouter");
 const index = require("./routes/index");
 const expressSession = require("express-session");
 const flash = require("connect-flash");
-
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const db = require("./config/mongoose-connection");
+require("dotenv").config();
 
+// Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.set("view engine", "ejs");
-require("dotenv").config();
 
-app.use("/", index);
-app.use("/owner", ownerRouter);
-app.use("/users", usersRouter);
-app.use("/products", productsRouter);
+// Set view engine
+app.set("view engine", "ejs");
+
+// Session and Flash middleware
 app.use(
   expressSession({
     resave: false,
@@ -31,4 +30,21 @@ app.use(
 );
 app.use(flash());
 
-app.listen(3000);
+// Middleware to make flash messages accessible in templates
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
+
+// Routes setup
+app.use("/", index);
+app.use("/owner", ownerRouter);
+app.use("/users", usersRouter);
+app.use("/products", productsRouter);
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
