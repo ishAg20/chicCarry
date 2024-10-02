@@ -38,16 +38,23 @@
                   <%= product.name %>
                 </h3>
                 <div class="flex justify-between items-center mt-1">
-                  <span class="text-xs text-gray-600">Qty: 1</span>
+                  <div class="flex items-center space-x-1">
+                    <button
+                      class="w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                    >
+                      <i class="ri-subtract-line text-gray-600 text-xs"></i>
+                    </button>
+                    <span class="text-xs font-medium">1</span>
+                    <button
+                      class="w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                    >
+                      <i class="ri-add-line text-gray-600 text-xs"></i>
+                    </button>
+                  </div>
                   <span class="text-sm font-semibold text-gray-800"
                     >₹<%= product.price.toLocaleString('en-IN') %></span
                   >
                 </div>
-                <button
-                  class="mt-1 text-xs text-red-600 hover:text-red-800 transition-colors"
-                >
-                  Remove
-                </button>
               </div>
             </div>
             <% }) %>
