@@ -10,9 +10,4 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/shop", isLoggedIn, async (req, res) => {
-  let products = await productModel.find();
-  res.render("shop", { products });
-});
-
 module.exports = router;

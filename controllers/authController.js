@@ -53,7 +53,7 @@ module.exports.loggedInUser = async (req, res) => {
     }
     let token = generateToken(user);
     res.cookie("token", token, { httpOnly: true });
-    res.redirect("/shop");
+    res.redirect("/users/shop");
   });
 };
 
