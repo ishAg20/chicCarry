@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const ownerRouter = require("./routes/ownerRouter");
 const usersRouter = require("./routes/usersRouter");
+const accountRouter = require("./routes/accountRouter");
 const productsRouter = require("./routes/productsRouter");
 const index = require("./routes/index");
 const expressSession = require("express-session");
@@ -42,6 +43,7 @@ app.use("/", index);
 app.use("/owner", ownerRouter);
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
+app.use("/users/account", accountRouter);
 
 // Start the server
 const PORT = process.env.PORT || 3000;

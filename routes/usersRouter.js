@@ -25,4 +25,17 @@ router.get("/cart", isLoggedIn, async (req, res) => {
   res.render("cart", { user });
 });
 
+router.get("/account", isLoggedIn, async (req, res) => {
+  try {
+    const user = await userModel.findOne({ email: req.user.email });
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+    res.render("account", { user, message: req.query.message });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error loading account page.");
+  }
+});
+
 module.exports = router;
