@@ -41,4 +41,29 @@ router.get("/edit", isLoggedIn, async (req, res) => {
   }
 });
 
+router.get("/address", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  res.render("addressUpdate", { user });
+});
+
+router.post("/address/add", isLoggedIn, async (req, res) => {
+  const { label, street, city, zip } = req.body;
+  await userModel.updateOne(
+    { email: req.user.email },
+    {
+      $push: {
+        addresses: { label, street, city, zip },
+      },
+    }
+  );
+  res.redirect("/users/account?message=Details updated successfully");
+});
+
+router.post("/address/delete/:index", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  user.addresses.splice(req.params.index, 1);
+  await user.save();
+  res.redirect("/users/account?message=Details updated successfully");
+});
+
 module.exports = router;

@@ -1,0 +1,153 @@
+<%- include('./partials/header') %>
+<div class="w-full h-screen flex items-start px-20 py-20">
+  <div
+    class="w-[85%] mx-auto flex flex-col gap-10 h-screen px-10 py-5 bg-gray-100"
+  >
+    <div class="text-center">
+      <h1 class="text-2xl font-bold">Manage Saved Addresses</h1>
+      <p class="text-gray-600 mt-2">Update or add your delivery addresses.</p>
+    </div>
+    <div class="bg-white shadow-md p-5 rounded-lg">
+      <% if (user.addresses.length > 0) { %>
+      <ul class="flex flex-col gap-4">
+        <% user.addresses.forEach((address, index) => { %>
+        <li class="bg-gray-50 p-4 rounded-md border border-gray-300">
+          <p><strong>Label:</strong> <%= address.label %></p>
+          <p>
+            <strong>Address:</strong> <%= address.street %>, <%= address.city
+            %>, <%= address.state %>, <%= address.zip %>
+          </p>
+          <div class="flex gap-3 mt-3">
+            <form
+              action="/users/account/address/delete/<%= index %>"
+              method="POST"
+              style="display: inline"
+            >
+              <button type="submit" class="text-red-500 hover:underline">
+                Delete
+              </button>
+            </form>
+          </div>
+        </li>
+        <% }); %>
+      </ul>
+      <% } else { %>
+      <p>No saved addresses found. Add a new one below!</p>
+      <% } %>
+    </div>
+    <div class="bg-white shadow-md p-5 rounded-lg mt-5">
+      <h2 class="text-xl font-bold mb-3">Add New Address</h2>
+      <form
+        action="/users/account/address/add"
+        method="post"
+        class="flex flex-col gap-5"
+      >
+        <div>
+          <label for="label" class="block text-gray-700 font-bold"
+            >Label (Home / Office ):</label
+          >
+          <input
+            type="text"
+            id="label"
+            required
+            name="label"
+            class="w-full border-gray-300 rounded-md p-2 mt-1"
+          />
+        </div>
+        <div>
+          <label for="street" class="block text-gray-700 font-bold"
+            >Street:</label
+          >
+          <input
+            type="text"
+            required
+            id="street"
+            name="street"
+            class="w-full border-gray-300 rounded-md p-2 mt-1"
+          />
+        </div>
+        <div>
+          <label for="city" class="block text-gray-700 font-bold">City:</label>
+          <input
+            required
+            type="text"
+            id="city"
+            name="city"
+            class="w-full border-gray-300 rounded-md p-2 mt-1"
+          />
+        </div>
+        <div>
+          <label for="state" class="block text-gray-700 font-bold"
+            >State:</label
+          >
+          <select
+            required
+            id="state"
+            name="state"
+            class="w-full border-gray-300 rounded-md p-2 mt-1"
+          >
+            <option value="" disabled selected>Select State</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+            <option value="Assam">Assam</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Chhattisgarh">Chhattisgarh</option>
+            <option value="Goa">Goa</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Jharkhand">Jharkhand</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Manipur">Manipur</option>
+            <option value="Meghalaya">Meghalaya</option>
+            <option value="Mizoram">Mizoram</option>
+            <option value="Nagaland">Nagaland</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Sikkim">Sikkim</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Tripura">Tripura</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="West Bengal">West Bengal</option>
+            <option value="Andaman and Nicobar Islands">
+              Andaman and Nicobar Islands
+            </option>
+            <option value="Chandigarh">Chandigarh</option>
+            <option value="Dadra and Nagar Haveli and Daman and Diu">
+              Dadra and Nagar Haveli and Daman and Diu
+            </option>
+            <option value="Lakshadweep">Lakshadweep</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Puducherry">Puducherry</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="zip" class="block text-gray-700 font-bold"
+            >ZIP Code:</label
+          >
+          <input
+            type="text"
+            required
+            id="zip"
+            name="zip"
+            class="w-full border-gray-300 rounded-md p-2 mt-1"
+          />
+        </div>
+        <button
+          type="submit"
+          class="bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 mt-3"
+        >
+          Save Address
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('./partials/footer') %>
