@@ -66,4 +66,24 @@ router.post("/address/delete/:index", isLoggedIn, async (req, res) => {
   res.redirect("/users/account?message=Details updated successfully");
 });
 
+router.get("/orders/:orderId", isLoggedIn, async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const user = await userModel
+      .findOne({ "orders.orderId": orderId })
+      .populate("orders.items.product")
+      .exec();
+
+    if (user) {
+      const order = user.orders.find((o) => o.orderId === orderId);
+      res.render("orders", { order });
+    } else {
+      res.status(404).render("orders", { order: null });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 module.exports = router;

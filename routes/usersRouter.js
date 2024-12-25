@@ -49,4 +49,48 @@ router.get("/account", isLoggedIn, async (req, res) => {
   }
 });
 
+router.get("/checkout", isLoggedIn, async (req, res) => {
+  try {
+    const user = await userModel
+      .findOne({ email: req.user.email })
+      .populate("cart");
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+    if (user.cart.length === 0) {
+      return res
+        .status(400)
+        .send("Your cart is empty. Please add items to proceed.");
+    }
+    let total = 0;
+    const items = user.cart.map((product) => {
+      total += product.price;
+      return { product: product._id, quantity: 1 };
+    });
+
+    const discounts = user.cart.reduce(
+      (totalDiscount, product) => totalDiscount + (product.discount || 0),
+      0
+    );
+    const platformFee = 20;
+    const finalTotal = total - discounts + platformFee;
+    const orderId = `ORD-${Date.now()}`;
+    const newOrder = {
+      orderId,
+      total: finalTotal,
+      items,
+    };
+    user.orders.push(newOrder);
+    user.cart = [];
+    await user.save();
+
+    res.render("account", {
+      user,
+    });
+  } catch (error) {
+    console.error("Error during checkout:", error);
+    res.status(500).send("An error occurred during checkout.");
+  }
+});
+
 module.exports = router;

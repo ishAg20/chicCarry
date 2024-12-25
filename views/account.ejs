@@ -1,8 +1,6 @@
 <%- include('./partials/header') %>
-<div class="w-full h-screen flex items-start px-20 py-20">
-  <div
-    class="w-[85%] mx-auto flex flex-col gap-10 h-screen px-10 py-5 bg-gray-100"
-  >
+<div class="w-full px-10 py-20">
+  <div class="w-full max-w-5xl mx-auto flex flex-col gap-10 bg-gray-100 p-8">
     <div class="text-center">
       <h1 class="text-2xl font-bold">
         Welcome, <%= user.fullname.split(' ')[0] %>!
@@ -21,25 +19,52 @@
           >Edit Details</a
         >
       </div>
-
       <div class="bg-white shadow-md p-5 rounded-lg">
         <h2 class="text-xl font-bold mb-3">Order History</h2>
         <% if (user.orders.length > 0) { %>
-        <ul class="list-disc pl-5">
-          <% user.orders.forEach(order => { %>
-          <li>
-            <span><strong>Order ID:</strong> <%= order.orderId %></span> -
-            <span><strong>Total:</strong> ₹<%= order.total %></span> -
-            <span><strong>Status:</strong> <%= order.items %></span>
-          </li>
-          <% }); %>
-        </ul>
+        <div class="overflow-x-auto">
+          <table
+            class="min-w-full table-auto border-collapse border border-gray-200"
+          >
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="border border-gray-200 px-4 py-2 text-left">
+                  Order ID
+                </th>
+                <th class="border border-gray-200 px-4 py-2 text-left">
+                  Total (₹)
+                </th>
+                <th class="border border-gray-200 px-4 py-2 text-left">Date</th>
+                <th class="border border-gray-200 px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% user.orders.forEach(order => { %>
+              <tr class="odd:bg-white even:bg-gray-50">
+                <td class="border border-gray-200 px-4 py-2">
+                  <%= order.orderId %>
+                </td>
+                <td class="border border-gray-200 px-4 py-2">
+                  <%= order.total %>
+                </td>
+                <td class="border border-gray-200 px-4 py-2">
+                  <%= new Date(order.createdAt).toLocaleDateString() %>
+                </td>
+                <td class="border border-gray-200 px-4 py-2 text-center">
+                  <a
+                    href="/users/account/orders/<%= order.orderId %>"
+                    class="text-blue-500 hover:underline"
+                    >Details</a
+                  >
+                </td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
         <% } else { %>
-        <p>You have not placed any orders yet.</p>
+        <p class="text-gray-600">You have not placed any orders yet.</p>
         <% } %>
-        <a class="text-blue-500 mt-3 block" href="/account/orders"
-          >View All Orders</a
-        >
       </div>
 
       <div class="bg-white shadow-md p-5 rounded-lg">

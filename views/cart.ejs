@@ -113,11 +113,29 @@
                 </div>
               </div>
             </div>
-            <button
-              class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg mt-4 text-sm hover:bg-blue-700 transition-colors"
-            >
-              Proceed to Checkout
-            </button>
+            <form action="/users/checkout" method="get" class="mt-4">
+              <label for="address" class="block text-gray-800 font-medium mb-2">
+                Select Delivery Address
+              </label>
+              <select
+                name="selectedAddress"
+                id="address"
+                class="w-full border-gray-300 rounded-lg p-2"
+                required
+              >
+                <% user.addresses.forEach(function(address, index) { %>
+                <option value="<%= index %>">
+                  <%= address.street %>, <%= address.city %>, <%= address.zip %>
+                </option>
+                <% }) %>
+              </select>
+              <button
+                type="submit"
+                class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg mt-4 text-sm hover:bg-blue-700 transition-colors"
+              >
+                Proceed to Checkout
+              </button>
+            </form>
           </div>
         </div>
       </div>

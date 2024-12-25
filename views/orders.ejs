@@ -1,0 +1,80 @@
+<%- include('./partials/header') %>
+<div class="w-full h-screen flex items-start px-20 py-20">
+  <div
+    class="w-[85%] mx-auto flex flex-col gap-10 h-screen px-10 py-5 bg-gray-100"
+  >
+    <div class="bg-white shadow-md p-5 rounded-lg">
+      <h2 class="text-2xl font-bold mb-3 text-center">Order Details</h2>
+      <% if (order) { %>
+      <div class="border-t border-gray-200 mt-3">
+        <div class="py-3">
+          <p><strong>Order ID:</strong> <%= order.orderId %></p>
+          <p>
+            <strong>Order Date:</strong> <%= new
+            Date(order.createdAt).toLocaleDateString() %>
+          </p>
+          <p><strong>Total Amount:</strong> ₹<%= order.total %></p>
+        </div>
+        <h3 class="text-xl font-semibold mt-5 mb-3">Items</h3>
+        <table
+          class="min-w-full table-auto border-collapse border border-gray-200"
+        >
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border border-gray-200 px-4 py-2 text-left">
+                Product Image
+              </th>
+              <th class="border border-gray-200 px-4 py-2 text-left">
+                Item Name
+              </th>
+              <th class="border border-gray-200 px-4 py-2 text-left">
+                Quantity
+              </th>
+              <th class="border border-gray-200 px-4 py-2 text-left">
+                Price (₹)
+              </th>
+              <th class="border border-gray-200 px-4 py-2 text-left">
+                Subtotal (₹)
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% order.items.forEach(item => { %>
+            <tr class="odd:bg-white even:bg-gray-50">
+              <td class="border border-gray-200 px-4 py-2 text-center">
+                <img
+                  src="data:image/png;base64,<%= item.product.image.toString('base64') %>"
+                  alt="<%= item.product.name %>"
+                  class="w-16 h-16 object-cover mx-auto"
+                />
+              </td>
+              <td class="border border-gray-200 px-4 py-2">
+                <%= item.product.name %>
+              </td>
+              <td class="border border-gray-200 px-4 py-2 text-center">
+                <%= item.quantity %>
+              </td>
+              <td class="border border-gray-200 px-4 py-2 text-center">
+                ₹<%= item.product.price %>
+              </td>
+              <td class="border border-gray-200 px-4 py-2 text-center">
+                ₹<%= item.quantity * (item.product.price -
+                item.product.discount) %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <a
+        class="text-blue-600 hover:text-blue-800 mt-5 inline-block"
+        href="/users/account"
+        >Back to Orders</a
+      >
+      <% } else { %>
+      <p class="text-gray-600">Order not found.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+<%- include('./partials/footer') %>
