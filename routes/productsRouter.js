@@ -10,6 +10,7 @@ router.post("/create", upload.single("image"), async (req, res) => {
   let product = await productModel.create({
     image: req.file.buffer,
     name,
+
     price,
     discount,
     bgcolor,
@@ -26,10 +27,15 @@ router.post("/delete", async (req, res) => {
 });
 
 router.get("/addtocart/:id", isLoggedIn, async (req, res) => {
-  let user = await userModel.findOne({ email: req.user.email });
-  user.cart.push(req.params.id);
-  await user.save();
-  res.redirect("/users/cart");
-});
+  try {
+    let user = await userModel.findOne({ email: req.user.email });
+    user.cart.push(req.params.id);
 
+    await user.save();
+    res.redirect("/users/cart");
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    res.status(500).send("An error occurred while adding to the cart.");
+  }
+});
 module.exports = router;

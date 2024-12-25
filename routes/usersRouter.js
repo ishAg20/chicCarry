@@ -19,10 +19,21 @@ router.get("/shop", isLoggedIn, async (req, res) => {
 });
 
 router.get("/cart", isLoggedIn, async (req, res) => {
-  let user = await userModel
-    .findOne({ email: req.user.email })
-    .populate("cart");
-  res.render("cart", { user });
+  try {
+    const user = await userModel
+      .findOne({ email: req.user.email })
+      .populate("cart");
+    res.render("cart", { user });
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    res.status(500).send("An error occurred while fetching the cart.");
+  }
+});
+router.post("/cart/product/delete/:index", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  user.cart.splice(req.params.index, 1);
+  await user.save();
+  res.redirect("/users/cart?message=Product deleted successfully");
 });
 
 router.get("/account", isLoggedIn, async (req, res) => {
