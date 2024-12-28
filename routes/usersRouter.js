@@ -13,11 +13,6 @@ router.post("/login", loggedInUser);
 
 router.get("/logout", loggedOut);
 
-router.get("/shop", isLoggedIn, async (req, res) => {
-  let products = await productModel.find();
-  res.render("shop", { products });
-});
-
 router.get("/cart", isLoggedIn, async (req, res) => {
   try {
     const user = await userModel
@@ -46,6 +41,31 @@ router.get("/account", isLoggedIn, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Error loading account page.");
+  }
+});
+
+router.get("/products", isLoggedIn, async (req, res) => {
+  const sortby = req.query.sortby || "newest";
+  try {
+    let query;
+    if (sortby === "pricelh") {
+      query = productModel.find().sort({ price: 1 });
+    } else if (sortby === "pricehl") {
+      query = productModel.find().sort({ price: -1 });
+    } else if (sortby === "newest") {
+      query = productModel.find().sort({ createdAt: -1 });
+    } else {
+      query = productModel.find();
+    }
+    const products = await query;
+    res.render("shop", { products, sortby });
+  } catch (err) {
+    console.error("Detailed error:", {
+      message: err.message,
+      stack: err.stack,
+      name: err.name,
+    });
+    res.status(500).send("Server Error");
   }
 });
 
