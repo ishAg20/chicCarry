@@ -14,8 +14,9 @@
         <li class="bg-gray-50 p-4 rounded-md border border-gray-300">
           <p><strong>Label:</strong> <%= address.label %></p>
           <p>
-            <strong>Address:</strong> <%= address.street %>, <%= address.city
-            %>, <%= address.state %>, <%= address.zip %>
+            <strong>Address:</strong> <%= address.street %>, <%= address.city %>
+            <br />
+            <%= address.zip %>
           </p>
           <div class="flex gap-3 mt-3">
             <form

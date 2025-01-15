@@ -21,7 +21,7 @@
           Browse our products and add them to your cart.
         </p>
         <a
-          href="/users/shop"
+          href="/users/products"
           class="mt-4 inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Shop Now
@@ -48,7 +48,9 @@
               <div
                 class="flex-grow p-2 bg-[<%= product.panelcolor %>] flex flex-col justify-between"
               >
-                <h3 class="text-sm font-semibold text-gray-800 truncate">
+                <h3
+                  class="text-sm font-semibold text-[<%= product.textcolor %>] truncate"
+                >
                   <%= product.name %>
                 </h3>
                 <div class="flex justify-between items-center mt-1">
@@ -66,7 +68,9 @@
                       </button>
                     </form>
                   </div>
-                  <span class="text-sm font-semibold text-gray-800">
+                  <span
+                    class="text-sm font-semibold text-[<%= product.textcolor %>]"
+                  >
                     ₹<%= product.price.toLocaleString('en-IN') %>
                   </span>
                 </div>

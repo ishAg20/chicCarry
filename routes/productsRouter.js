@@ -6,24 +6,34 @@ const isLoggedIn = require("../middlewares/isLoggedIn");
 const userModel = require("../models/user-model");
 
 router.post("/create", upload.single("image"), async (req, res) => {
-  let { name, price, discount, bgcolor, panelcolor, textcolor } = req.body;
-  let product = await productModel.create({
-    image: req.file.buffer,
-    name,
+  try {
+    let { name, price, discount, bgcolor, panelcolor, textcolor } = req.body;
+    let product = await productModel.create({
+      image: req.file.buffer,
+      name,
 
-    price,
-    discount,
-    bgcolor,
-    panelcolor,
-    textcolor,
-  });
-  req.flash("success", "Product created successfully");
-  res.redirect("/owner/admin");
+      price,
+      discount,
+      bgcolor,
+      panelcolor,
+      textcolor,
+    });
+    req.flash("success", "Product created successfully");
+    res.redirect("/owner/admin");
+  } catch (error) {
+    console.error("Internal server error", error);
+    res.status(500).send("Internal server error");
+  }
 });
 
 router.post("/delete", async (req, res) => {
-  let result = await productModel.deleteMany({});
-  res.redirect("/owner/admin");
+  try {
+    let result = await productModel.deleteMany({});
+    res.redirect("/owner/admin");
+  } catch (error) {
+    console.error("Internal server error", error);
+    res.status(500).send("Internal server error");
+  }
 });
 
 router.get("/addtocart/:id", isLoggedIn, async (req, res) => {

@@ -25,10 +25,15 @@ router.get("/cart", isLoggedIn, async (req, res) => {
   }
 });
 router.post("/cart/product/delete/:index", isLoggedIn, async (req, res) => {
-  let user = await userModel.findOne({ email: req.user.email });
-  user.cart.splice(req.params.index, 1);
-  await user.save();
-  res.redirect("/users/cart?message=Product deleted successfully");
+  try {
+    let user = await userModel.findOne({ email: req.user.email });
+    user.cart.splice(req.params.index, 1);
+    await user.save();
+    res.redirect("/users/cart?message=Product deleted successfully");
+  } catch (error) {
+    console.error("Internal server error", error);
+    res.status(500).send("Internal server error");
+  }
 });
 
 router.get("/account", isLoggedIn, async (req, res) => {

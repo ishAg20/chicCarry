@@ -16,9 +16,10 @@ router.post("/edit", isLoggedIn, async (req, res) => {
       return res.status(404).send("User not found.");
     }
 
-    await userModel.updateOne(
+    await userModel.findOneAndUpdate(
       { email: req.user.email },
-      { fullname, email, contact, password }
+      { fullname, email, contact, password },
+      { runValidators: true }
     );
 
     res.redirect("/users/account?message=Details updated successfully");
@@ -42,28 +43,44 @@ router.get("/edit", isLoggedIn, async (req, res) => {
 });
 
 router.get("/address", isLoggedIn, async (req, res) => {
-  let user = await userModel.findOne({ email: req.user.email });
-  res.render("addressUpdate", { user });
+  try {
+    let user = await userModel.findOne({ email: req.user.email });
+    res.render("addressUpdate", { user });
+  } catch (error) {
+    console.error("Error fetching addresses:", error);
+    res.status(500).send("Error fetching addresses.");
+  }
 });
 
 router.post("/address/add", isLoggedIn, async (req, res) => {
-  const { label, street, city, zip } = req.body;
-  await userModel.updateOne(
-    { email: req.user.email },
-    {
-      $push: {
-        addresses: { label, street, city, zip },
+  try {
+    const { label, street, city, zip } = req.body;
+    await userModel.findOneAndUpdateOne(
+      { email: req.user.email },
+      {
+        $push: {
+          addresses: { label, street, city, zip },
+        },
       },
-    }
-  );
-  res.redirect("/users/account?message=Details updated successfully");
+      { runValidators: true }
+    );
+    res.redirect("/users/account?message=Details updated successfully");
+  } catch (error) {
+    console.error("Error updating addresses.", error);
+    res.status(500).send("Error updating addresses.");
+  }
 });
 
 router.post("/address/delete/:index", isLoggedIn, async (req, res) => {
-  let user = await userModel.findOne({ email: req.user.email });
-  user.addresses.splice(req.params.index, 1);
-  await user.save();
-  res.redirect("/users/account?message=Details updated successfully");
+  try {
+    let user = await userModel.findOne({ email: req.user.email });
+    user.addresses.splice(req.params.index, 1);
+    await user.save();
+    res.redirect("/users/account?message=Details updated successfully");
+  } catch (error) {
+    console.error("Error deleting addresses.", error);
+    res.status(500).send("Error deleting addresses.");
+  }
 });
 
 router.get("/orders/:orderId", isLoggedIn, async (req, res) => {
