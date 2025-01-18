@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Shopping Cart</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
-  </head>
+<%- include('./partials/header') %>
   <body class="bg-gray-100 min-h-screen">
-    <%- include('./partials/header') %>
+ 
 
     <div class="container mx-auto px-4 py-6">
       <% if (user.cart.length === 0) { %>
@@ -71,7 +60,18 @@
                   <span
                     class="text-sm font-semibold text-[<%= product.textcolor %>]"
                   >
-                    ₹<%= product.price.toLocaleString('en-IN') %>
+                    <h4>
+                      <% if (product.price !== product.discount) { %>
+                      <span style="text-decoration: line-through"
+                        >₹ <%= product.price %></span
+                      >
+                      <span style="margin-left: 10px"
+                        >₹ <%= product.discount %></span
+                      >
+                      <% } else { %>
+                      <span>₹ <%= product.price %></span>
+                      <% } %>
+                    </h4>
                   </span>
                 </div>
               </div>
@@ -80,8 +80,8 @@
           </div>
         </div>
 
-        <div class="w-full lg:w-1/3 mt-6 lg:mt-0">
-          <div class="bg-white rounded-lg shadow-md p-4 sticky top-4">
+        <div class="w-full lg:w-1/3 mt-6 lg:mt-10">
+          <div class="bg-white rounded-lg shadow-md p-4 top-4">
             <h3 class="text-xl font-bold mb-4 text-gray-800">Order Summary</h3>
             <div class="space-y-2 text-sm">
               <% let totalMRP = 0; %> <% user.cart.forEach(function(product) {
@@ -95,8 +95,9 @@
               <div class="flex justify-between">
                 <span class="text-gray-600">Discount</span>
                 <span class="font-medium text-green-600">
-                  -₹<%= user.cart.reduce((total, product) => total +
-                  product.discount, 0).toLocaleString('en-IN') %>
+                  -₹<%= user.cart.reduce((total, product) => total
+                  +(product.price- product.discount), 0).toLocaleString('en-IN')
+                  %>
                 </span>
               </div>
               <div class="flex justify-between">
@@ -111,8 +112,9 @@
                 <div class="flex justify-between items-center">
                   <span class="font-semibold text-gray-800">Total</span>
                   <span class="text-lg font-bold text-green-600">
-                    ₹<%= (totalMRP - user.cart.reduce((total, product) => total
-                    + product.discount, 0) + 20).toLocaleString('en-IN') %>
+                    ₹<%= (totalMRP - user.cart.reduce((total, product) =>
+                    total+(product.price- product.discount), 0) +
+                    20).toLocaleString('en-IN') %>
                   </span>
                 </div>
               </div>
@@ -121,24 +123,34 @@
               <label for="address" class="block text-gray-800 font-medium mb-2">
                 Select Delivery Address
               </label>
-              <select
-                name="selectedAddress"
-                id="address"
-                class="w-full border-gray-300 rounded-lg p-2"
-                required
-              >
-                <% user.addresses.forEach(function(address, index) { %>
-                <option value="<%= index %>">
-                  <%= address.street %>, <%= address.city %>, <%= address.zip %>
-                </option>
-                <% }) %>
-              </select>
-              <button
+              <% if (user.addresses.length > 0) { %>
+                <select
+                  name="selectedAddress"
+                  id="address"
+                  class="w-full border-gray-300 rounded-lg p-2"
+                  required
+                >
+                  <% user.addresses.forEach(function(address, index) { %>
+                    <option value="<%= index %>">
+                      <%= address.street %>, <%= address.city %>, <%= address.zip %>
+                    </option>
+                  <% }) %>
+                </select>     <button
                 type="submit"
                 class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg mt-4 text-sm hover:bg-blue-700 transition-colors"
               >
                 Proceed to Checkout
               </button>
+              <% } else { %>
+                <div class="text-gray-600">
+                  No delivery addresses available. 
+                  <a 
+                    href="/users/account/address" 
+                     class="w-full bg-blue-600 text-white font-semibold p-2 rounded-lg mt-4 text-sm hover:bg-blue-700 transition-colors">
+                    Add an Address
+                  </a>
+                </div>
+              <% } %>
             </form>
           </div>
         </div>

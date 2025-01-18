@@ -20,7 +20,6 @@ const ownerSchema = mongoose.Schema({
       message: "GSTIN must be 15 characters",
     },
   },
-  profilepic: { type: String, required: true },
 });
 
 module.exports = mongoose.model("owner", ownerSchema);

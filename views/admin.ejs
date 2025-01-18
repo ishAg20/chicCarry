@@ -42,14 +42,17 @@
         >
           <div>
             <h3><%= product.name %></h3>
-            <h4>₹ <%= product.price %></h4>
+            <h4>
+              <% if (product.price !== product.discount) { %>
+              <span style="text-decoration: line-through"
+                >₹ <%= product.price %></span
+              >
+              <span style="margin-left: 10px">₹ <%= product.discount %></span>
+              <% } else { %>
+              <span>₹ <%= product.price %></span>
+              <% } %>
+            </h4>
           </div>
-          <a
-            class="w-7 h-7 flex items-center justify-center rounded-full bg-white"
-            href=""
-          >
-            <i class="ri-add-line"></i>
-          </a>
         </div>
       </div>
       <% }) %>
