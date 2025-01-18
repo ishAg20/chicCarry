@@ -92,11 +92,12 @@ router.get("/checkout", isLoggedIn, async (req, res) => {
       total += product.price;
       return { product: product._id, quantity: 1 };
     });
-
-    const discounts = user.cart.reduce(
-      (totalDiscount, product) => totalDiscount + (product.discount || 0),
-      0
-    );
+    const discounts = user.cart.reduce((totalDiscount, product) => {
+      if (product.discount && product.price > product.discount) {
+        return totalDiscount + (product.price - product.discount);
+      }
+      return totalDiscount;
+    }, 0);
     const platformFee = 20;
     const finalTotal = total - discounts + platformFee;
     const orderId = `ORD-${Date.now()}`;

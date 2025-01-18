@@ -55,7 +55,7 @@ router.get("/address", isLoggedIn, async (req, res) => {
 router.post("/address/add", isLoggedIn, async (req, res) => {
   try {
     const { label, street, city, zip } = req.body;
-    await userModel.findOneAndUpdateOne(
+    await userModel.findOneAndUpdate(
       { email: req.user.email },
       {
         $push: {

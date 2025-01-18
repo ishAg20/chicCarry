@@ -84,20 +84,26 @@
           <div class="bg-white rounded-lg shadow-md p-4 top-4">
             <h3 class="text-xl font-bold mb-4 text-gray-800">Order Summary</h3>
             <div class="space-y-2 text-sm">
-              <% let totalMRP = 0; %> <% user.cart.forEach(function(product) {
-              %> <% totalMRP += product.price; %> <% }) %>
+              <% 
+                let totalMRP = 0; 
+                let totalDiscount = 0; 
+                user.cart.forEach(function(product) { 
+                  totalMRP += product.price; 
+                  if (product.discount && product.price > product.discount) {
+                    totalDiscount += product.price - product.discount;
+                  }
+                }); 
+              %>
               <div class="flex justify-between">
                 <span class="text-gray-600">Subtotal</span>
-                <span class="font-medium"
-                  >₹<%= totalMRP.toLocaleString('en-IN') %></span
-                >
+                <span class="font-medium">
+                  ₹<%= totalMRP.toLocaleString('en-IN') %>
+                </span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Discount</span>
                 <span class="font-medium text-green-600">
-                  -₹<%= user.cart.reduce((total, product) => total
-                  +(product.price- product.discount), 0).toLocaleString('en-IN')
-                  %>
+                  -₹<%= totalDiscount.toLocaleString('en-IN') %>
                 </span>
               </div>
               <div class="flex justify-between">
@@ -112,9 +118,7 @@
                 <div class="flex justify-between items-center">
                   <span class="font-semibold text-gray-800">Total</span>
                   <span class="text-lg font-bold text-green-600">
-                    ₹<%= (totalMRP - user.cart.reduce((total, product) =>
-                    total+(product.price- product.discount), 0) +
-                    20).toLocaleString('en-IN') %>
+                    ₹<%= (totalMRP - totalDiscount + 20).toLocaleString('en-IN') %>
                   </span>
                 </div>
               </div>
