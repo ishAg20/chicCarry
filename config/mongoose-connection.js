@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables
+require("dotenv").config();
 const mongoose = require("mongoose");
 
 mongoose
@@ -6,7 +6,5 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("MongoDB Connected."))
-  .catch((err) => console.error("MongoDB Connection Error:", err));
-
-module.exports = mongoose.connection;
+  .then(() => console.log("✅ MongoDB Connected Successfully!"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
