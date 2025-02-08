@@ -1,7 +1,13 @@
+require("dotenv").config(); // Load environment variables
+
 const mongoose = require("mongoose");
 
-const uri =
-  "mongodb+srv://agarwalishika2012:ishika123@cluster0.b80jk.mongodb.net/chicCarry?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGODB_URI; // Get URI from .env
+
+if (!uri) {
+  console.error("❌ MONGODB_URI is missing in .env file!");
+  process.exit(1); // Stop execution if URI is missing
+}
 
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
