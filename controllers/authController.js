@@ -5,60 +5,57 @@ const generateToken = require("../utils/generateToken");
 module.exports.registerUser = async (req, res) => {
   try {
     let { email, fullname, password } = req.body;
-    const user = await userModel.findOne({ email });
-    if (user) {
-      req.flash("error", "User already exists. Login!");
-      return res.redirect("/");
+    const existingUser = await userModel.findOne({ email });
+
+    if (existingUser) {
+      return res.redirect("/?error=User already exists. Please log in.");
     }
-    bcrypt.genSalt(10, (err, salt) => {
-      if (err) {
-        return res.status(500).send(err.message);
-      }
-      bcrypt.hash(password, salt, async (err, hash) => {
-        if (err) {
-          return res.status(500).send(err.message);
-        }
-        try {
-          let user = await userModel.create({
-            email,
-            password: hash,
-            fullname,
-          });
-          let token = generateToken(user);
-          res.cookie("token", token, { httpOnly: true });
-          req.flash("success", "User registered successfully");
-          res.redirect("/");
-        } catch (err) {
-          req.flash("error", "An error occurred during registration.");
-          res.redirect("/");
-        }
-      });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    let newUser = await userModel.create({
+      email,
+      fullname,
+      password: hashedPassword,
     });
+
+    let token = generateToken(newUser);
+    res.cookie("token", token, { httpOnly: true });
+
+    return res.redirect("/?success=User registered successfully!");
   } catch (err) {
-    res.status(500).send(err.message);
+    console.error("Registration Error:", err);
+    return res.redirect("/?error=An error occurred during registration.");
   }
 };
 
 module.exports.loggedInUser = async (req, res) => {
-  let { email, password } = req.body;
-  const user = await userModel.findOne({ email });
-  if (!user) {
-    req.flash("error", "Incorrect password or email");
-    return res.redirect("/");
-  }
-  bcrypt.compare(password, user.password, (err, result) => {
-    if (!result) {
-      req.flash("error", "Incorrect password or email");
-      return res.redirect("/");
+  try {
+    let { email, password } = req.body;
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.redirect("/?error=Incorrect email or password.");
     }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.redirect("/?error=Incorrect email or password.");
+    }
+
     let token = generateToken(user);
     res.cookie("token", token, { httpOnly: true });
+
     res.redirect("/users/products");
-  });
+  } catch (error) {
+    console.error("Login Error:", error);
+    return res.redirect("/?error=An error occurred during login.");
+  }
 };
 
 module.exports.loggedOut = (req, res) => {
   res.clearCookie("token");
-  req.flash("success", "Logged out successfully");
-  res.redirect("/");
+  return res.redirect("/?success=Logged out successfully!");
 };

@@ -6,7 +6,6 @@ const accountRouter = require("./routes/accountRouter");
 const productsRouter = require("./routes/productsRouter");
 const index = require("./routes/index");
 const expressSession = require("express-session");
-const flash = require("connect-flash");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const db = require("./config/mongoose-connection");
@@ -21,20 +20,21 @@ app.use(express.static(path.join(__dirname, "public")));
 // Set view engine
 app.set("view engine", "ejs");
 
-// Session and Flash middleware
+// Session Middleware (Flash removed)
 app.use(
   expressSession({
+    secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    secret: process.env.EXPRESS_SESSION_SECRET,
   })
 );
-app.use(flash());
 
-// Middleware to make flash messages accessible in templates
+// Middleware to attach success/error messages from session to response locals
 app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
+  res.locals.success = req.session.success || "";
+  res.locals.error = req.session.error || "";
+  req.session.success = "";
+  req.session.error = "";
   next();
 });
 

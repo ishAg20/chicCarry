@@ -1,16 +1,12 @@
 const express = require("express");
-const isLoggedIn = require("../middlewares/isLoggedIn");
 const router = express.Router();
-const productModel = require("../models/product-model");
 
 router.get("/", (req, res) => {
   try {
-    res.render("index", {
-      error: req.flash("error"),
-      success: req.flash("success"),
-    });
+    const { error, success } = req.query;
+    res.render("index", { error, success });
   } catch (error) {
-    console.error("Internal server error", error);
+    console.error("Error rendering index page:", error);
     res.status(500).send("Internal server error");
   }
 });

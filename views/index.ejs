@@ -1,26 +1,30 @@
 <%- include('./partials/header-index') %>
 
-<!-- Display error messages -->
-<% if (error.length > 0) { %>
-<div class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-11/12 md:w-auto">
-  <div class="p-3 rounded-md bg-red-500">
-    <span class="inline-block mt-1 mb-1 text-white"><%= error[0] %></span>
-  </div>
-</div>
-<% } %>
+<div class="mt-16 flex justify-center items-center w-full">
+  <% if (error) { %>
+    <div class="alert alert-danger bg-red-500 text-white px-4 py-2 rounded-md shadow-md text-center w-3/4 md:w-1/2">
+      <%= error %>
+    </div>
+  <% } %>
 
-<!-- Display success messages -->
-<% if (success.length > 0) { %>
-<div class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-11/12 md:w-auto">
-  <div class="p-3 rounded-md bg-green-500">
-    <span class="inline-block mt-1 mb-1 text-white"><%= success[0] %></span>
-  </div>
+  <% if (success) { %>
+    <div class="alert alert-success bg-green-500 text-white px-4 py-2 rounded-md shadow-md text-center w-3/4 md:w-1/2">
+      <%= success %>
+    </div>
+  <% } %>
 </div>
-<% } %>
 
-<div
-  class="w-full h-screen flex flex-col md:flex-row px-4 md:px-20 justify-center items-center"
->
+<script>
+  // Auto-hide messages after 5 seconds
+  setTimeout(() => {
+    const errorMsg = document.querySelector(".alert-danger");
+    const successMsg = document.querySelector(".alert-success");
+    if (errorMsg) errorMsg.style.display = "none";
+    if (successMsg) successMsg.style.display = "none";
+  }, 5000);
+</script>
+
+<div class="w-full h-screen flex flex-col md:flex-row px-4 md:px-20 justify-center items-center">
   <!-- Registration Section -->
   <div class="w-full md:w-1/2 flex items-center justify-center py-4 md:py-0">
     <div class="w-full max-w-md px-4 md:px-12 text-center md:text-left">
@@ -29,29 +33,10 @@
       </h3>
       <h4 class="text-lg md:text-2xl mb-5">Create your account</h4>
       <form autocomplete="off" action="/users/register" method="post">
-        <input
-          class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3"
-          type="text"
-          placeholder="Full Name"
-          name="fullname"
-        />
-        <input
-          class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3"
-          type="email"
-          placeholder="Email"
-          name="email"
-        />
-        <input
-          class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3"
-          type="password"
-          placeholder="Password"
-          name="password"
-        />
-        <input
-          class="w-full md:w-auto px-5 rounded-full py-3 mt-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors"
-          type="submit"
-          value="Create My Account"
-        />
+        <input class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="text" placeholder="Full Name" name="fullname" />
+        <input class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="email" placeholder="Email" name="email" />
+        <input class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="password" placeholder="Password" name="password" />
+        <input class="w-full md:w-auto px-5 rounded-full py-3 mt-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors" type="submit" value="Create My Account" />
       </form>
     </div>
   </div>
@@ -61,23 +46,9 @@
     <div class="w-full max-w-md px-4 md:px-12 text-center md:text-left">
       <h4 class="text-lg md:text-2xl capitalize mb-5">Login to your account</h4>
       <form autocomplete="off" action="/users/login" method="post">
-        <input
-          class="block bg-zinc-100 w-full px-3 py-2 border border-zinc-200 rounded-md mb-3"
-          type="email"
-          placeholder="Email"
-          name="email"
-        />
-        <input
-          class="block bg-zinc-100 w-full px-3 py-2 border border-zinc-200 rounded-md mb-3"
-          type="password"
-          placeholder="Password"
-          name="password"
-        />
-        <input
-          class="w-full md:w-auto px-5 block rounded-full py-3 mt-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors"
-          type="submit"
-          value="Login"
-        />
+        <input class="block bg-zinc-100 w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="email" placeholder="Email" name="email" />
+        <input class="block bg-zinc-100 w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="password" placeholder="Password" name="password" />
+        <input class="w-full md:w-auto px-5 block rounded-full py-3 mt-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors" type="submit" value="Login" />
       </form>
     </div>
   </div>
