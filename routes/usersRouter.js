@@ -54,9 +54,16 @@ router.get("/products", isLoggedIn, async (req, res) => {
   try {
     let query;
     if (sortby === "pricelh") {
-      query = productModel.find().sort({ price: 1 });
+      query = productModel.find().sort({
+        discount: { $ifNull: ["$discount", "$price"] },
+      });
     } else if (sortby === "pricehl") {
-      query = productModel.find().sort({ price: -1 });
+      query = productModel
+        .find()
+        .sort({
+          discount: { $ifNull: ["$discount", "$price"] },
+        })
+        .sort({ discount: -1 });
     } else if (sortby === "newest") {
       query = productModel.find().sort({ createdAt: -1 });
     } else {
