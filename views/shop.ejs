@@ -1,50 +1,56 @@
 <%- include('./partials/header') %>
-<div class="w-full h-screen flex items-start px-20 py-20">
-  <div class="w-[25%] flex h-screen flex-col items-start">
+<div class="w-full min-h-screen flex flex-col lg:flex-row px-4 sm:px-8 lg:px-20 py-10 sm:py-20 gap-5">
+  
+  <!-- Sidebar (Sort By) -->
+  <div class="w-full lg:w-1/4 flex flex-col items-start">
     <div class="flex items-center gap-2">
-      <h3>Sort by</h3>
-      <form action="/users/products" method="GET">
-        <select
-        class="border-[1px] px-2 py-1"
-        name="sortby"
-        id="sortby"
-        onchange="window.location.href = '/users/products?sortby=' + this.value"
-      ><option value="newest" <%= sortby === 'newest' ? 'selected' : '' %>>Newest First</option>
-        <option value="pricelh" <%= sortby === 'pricelh' ? 'selected' : '' %>>Price (Lowest to Highest)</option>
-        <option value="pricehl" <%= sortby === 'pricehl' ? 'selected' : '' %>>Price (Highest to Lowest)</option>
-      </select>
-    </form>
+      <h3 class="text-lg font-semibold">Sort by</h3>
+      <form action="/users/products" method="GET" class="w-full">
+        <select class="border px-3 py-2 rounded-md w-full sm:w-auto"
+                name="sortby" id="sortby"
+                onchange="window.location.href = '/users/products?sortby=' + this.value">
+          <option value="newest" <%= sortby === 'newest' ? 'selected' : '' %>>Newest First</option>
+          <option value="pricelh" <%= sortby === 'pricelh' ? 'selected' : '' %>>Price (Lowest to Highest)</option>
+          <option value="pricehl" <%= sortby === 'pricehl' ? 'selected' : '' %>>Price (Highest to Lowest)</option>
+        </select>
+      </form>
     </div>
   </div>
-  <div class="w-[75%] flex flex-col gap-5 h-screen">
-    <div class="flex flex-wrap gap-5">
-      <% products.forEach(function(product, index) { %>
-      <div class="w-60 flex-shrink-0">
+
+  <!-- Product Grid -->
+  <div class="w-full lg:w-3/4 flex flex-col gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <% products.forEach(function(product) { %>
+      <div class="w-full">
         <div class="w-full h-52 flex items-center justify-center" style="background-color: <%= product.bgcolor %>">
-          <img class="h-[12rem] object-contain" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>" />
+          <img class="h-[10rem] sm:h-[12rem] object-contain" 
+               src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" 
+               alt="<%= product.name %>" />
         </div>
-        <div class="flex justify-between items-center px-4 py-4" style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>;">
+        <div class="flex justify-between items-center px-4 py-4 rounded-lg" 
+             style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>;">
           <div>
             <h3 class="text-lg font-semibold"><%= product.name %></h3>
-            <h4>
+            <h4 class="text-sm">
               <% if (product.price !== product.discount) { %>
-              <span style="text-decoration: line-through"
-                >₹ <%= product.price %></span
-              >
-              <span style="margin-left: 10px">₹ <%= product.discount %></span>
+                <span class="line-through text-gray-500">₹<%= product.price %></span>
+                <span style="margin-left: 10px">₹ <%= product.discount %></span>
               <% } else { %>
-              <span>₹ <%= product.price %></span>
+                <span>₹<%= product.price %></span>
               <% } %>
             </h4>
           </div>
-          <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-md" href="/products/addtocart/<%= product._id %>" style="color: <%= product.panelcolor %>" aria-label="Add <%= product.name %> to cart">
-            <i class="ri-add-line"></i>
+          <a class="w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md transition-all hover:scale-110"
+             href="/products/addtocart/<%= product._id %>"
+             style="color: <%= product.panelcolor %>"
+             aria-label="Add <%= product.name %> to cart">
+            <i class="ri-add-line text-lg"></i>
           </a>
         </div>
       </div>
       <% }) %>
     </div>
   </div>
-</div>
 
+</div>
 <%- include('./partials/footer') %>

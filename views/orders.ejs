@@ -1,17 +1,17 @@
 <%- include('./partials/header') %>
 <div
-  class="w-full min-h-screen flex flex-col items-start px-4 sm:px-8 lg:px-20 py-10 sm:py-20"
+  class="w-full min-h-screen flex flex-col items-center px-4 sm:px-8 lg:px-20 py-10 sm:py-20"
 >
   <div
     class="w-full lg:w-[85%] mx-auto flex flex-col gap-10 bg-gray-100 rounded-lg p-5 sm:p-10"
   >
-    <div class="bg-white shadow-md p-5 sm:p-8 rounded-lg">
+    <div class="bg-white shadow-md p-5 sm:p-8 rounded-lg w-full">
       <h2 class="text-xl sm:text-2xl font-bold mb-3 text-center">
         Order Details
       </h2>
       <% if (order) { %>
       <div class="border-t border-gray-200 mt-3">
-        <div class="py-3">
+        <div class="py-3 space-y-2">
           <p class="text-sm sm:text-base">
             <strong>Order ID:</strong> <%= order.orderId %>
           </p>
@@ -26,7 +26,7 @@
         <h3 class="text-lg sm:text-xl font-semibold mt-5 mb-3">Items</h3>
         <div class="overflow-x-auto">
           <table
-            class="min-w-full table-auto border-collapse border border-gray-200 text-sm sm:text-base"
+            class="w-full table-auto border-collapse border border-gray-200 text-sm sm:text-base"
           >
             <thead class="bg-gray-100">
               <tr>
@@ -36,7 +36,6 @@
                 <th class="border border-gray-200 px-2 sm:px-4 py-2 text-left">
                   Name
                 </th>
-
                 <th class="border border-gray-200 px-2 sm:px-4 py-2 text-left">
                   Price (₹)
                 </th>
@@ -54,13 +53,12 @@
                   <img
                     src="data:image/png;base64,<%= item.product.image.toString('base64') %>"
                     alt="<%= item.product.name %>"
-                    class="w-12 sm:w-16 h-12 sm:h-16 object-fit mx-auto"
+                    class="w-16 h-16 sm:w-20 sm:h-20 object-contain mx-auto"
                   />
                 </td>
                 <td class="border border-gray-200 px-2 sm:px-4 py-2">
                   <%= item.product.name %>
                 </td>
-
                 <td
                   class="border border-gray-200 px-2 sm:px-4 py-2 text-center"
                 >

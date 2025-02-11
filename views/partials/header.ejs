@@ -12,35 +12,64 @@
   </head>
   <body class="font-['helvetica_now_display']">
     <nav
-      class="w-full fixed top-0 left-0 px-10 py-10 sm:px-6 md:px-10 py-5 bg-gray-800 shadow-lg"
+      class="w-full fixed top-0 left-0 px-6 md:px-10 py-5 bg-gray-800 shadow-lg"
     >
-      <div
-        class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0"
-      >
-        <h3 class="text-xl sm:text-2xl font-bold text-white">chicCarry</h3>
-        <div class="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <h3 class="text-xl md:text-2xl font-bold text-white">chicCarry</h3>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="menu-btn"
+          class="text-white text-2xl md:hidden focus:outline-none"
+        >
+          <i class="ri-menu-line"></i>
+        </button>
+
+        <!-- Menu Items -->
+        <div
+          id="menu"
+          class="hidden md:flex flex-col md:flex-row items-center gap-4 md:gap-6"
+        >
           <a
             href="/users/account"
-            class="text-white hover:text-gray-400 transition duration-300"
+            class="text-white hover:text-gray-400 transition"
             >My Account</a
           >
           <a
             href="/users/products"
-            class="text-white hover:text-gray-400 transition duration-300"
+            class="text-white hover:text-gray-400 transition"
             >Shop</a
           >
           <a
             href="/users/cart"
-            class="text-white hover:text-gray-400 transition duration-300"
+            class="text-white hover:text-gray-400 transition"
             >Cart</a
           >
           <a
             href="/users/logout"
-            class="text-white hover:text-gray-400 transition duration-300"
+            class="text-white hover:text-gray-400 transition"
             >Logout</a
           >
         </div>
       </div>
     </nav>
+
+    <script>
+      const menuBtn = document.getElementById("menu-btn");
+      const menu = document.getElementById("menu");
+
+      menuBtn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+        menu.classList.toggle("flex");
+        menu.classList.toggle("flex-col");
+        menu.classList.toggle("absolute");
+        menu.classList.toggle("top-16");
+        menu.classList.toggle("left-0");
+        menu.classList.toggle("w-full");
+        menu.classList.toggle("bg-gray-800");
+        menu.classList.toggle("p-5");
+      });
+    </script>
   </body>
 </html>

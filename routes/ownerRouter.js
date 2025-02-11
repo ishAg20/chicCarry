@@ -13,14 +13,17 @@ router.post("/login", async (req, res) => {
   let { email, password } = req.body;
   const owner = await ownerModel.findOne({ email });
   if (!owner) {
+    req.flash("error", "Invalid email or password");
     return res.redirect("/");
   }
   bcrypt.compare(password, owner.password, (err, result) => {
     if (!result) {
+      req.flash("error", "Invalid email or password");
       return res.redirect("/");
     }
     let token = generateToken(owner);
     res.cookie("token", token, { httpOnly: true });
+    req.flash("success", "Successfully logged in");
     res.redirect("/owners/admin");
   });
 });

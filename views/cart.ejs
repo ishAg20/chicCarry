@@ -1,9 +1,7 @@
 <%- include('./partials/header') %>
-  <body class="bg-gray-100 min-h-screen">
- 
-
-    <div class="container mx-auto px-4 py-6">
-      <% if (user.cart.length === 0) { %>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-6">
+    <% if (user.cart.length === 0) { %>
       <div class="text-center">
         <h2 class="text-2xl font-bold text-gray-800">Your Cart is Empty</h2>
         <p class="text-gray-600 mt-2">
@@ -16,152 +14,129 @@
           Shop Now
         </a>
       </div>
-      <% } else { %>
-      <div class="flex flex-col lg:flex-row gap-6">
-        <div class="w-full lg:w-2/3">
-          <h2 class="text-2xl font-bold mb-4 text-gray-800">Your Cart</h2>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            <% user.cart.forEach(function(product, index) { %>
-            <div
-              class="bg-white rounded-lg shadow-sm overflow-hidden h-48 flex flex-col"
-            >
-              <div
-                class="h-24 bg-[<%= product.bgcolor %>] flex items-center justify-center overflow-hidden"
-              >
-                <img
-                  class="w-full h-full object-contain"
-                  src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
-                  alt="<%= product.name %>"
-                />
-              </div>
-              <div
-                class="flex-grow p-2 bg-[<%= product.panelcolor %>] flex flex-col justify-between"
-              >
-                <h3
-                  class="text-sm font-semibold text-[<%= product.textcolor %>] truncate"
-                >
-                  <%= product.name %>
-                </h3>
-                <div class="flex justify-between items-center mt-1">
-                  <div class="flex items-center space-x-1">
-                    <form
-                      action="/users/cart/product/delete/<%= index %>"
-                      method="POST"
-                      style="display: inline"
-                    >
-                      <button
-                        type="submit"
-                        class="text-white hover:text-red-500"
-                      >
-                        Delete
-                      </button>
-                    </form>
-                  </div>
-                  <span
-                    class="text-sm font-semibold text-[<%= product.textcolor %>]"
-                  >
-                    <h4>
-                      <% if (product.price !== product.discount) { %>
-                      <span style="text-decoration: line-through"
-                        >₹ <%= product.price %></span
-                      >
-                      <span style="margin-left: 10px"
-                        >₹ <%= product.discount %></span
-                      >
-                      <% } else { %>
-                      <span>₹ <%= product.price %></span>
-                      <% } %>
-                    </h4>
-                  </span>
-                </div>
-              </div>
+    <% } else { %>
+     <!-- Main Container -->
+<div class=" max-w-6xl mx-auto space-y-6">
+  <!-- Cart Section -->
+  <div class="w-full">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Your Cart</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <% user.cart.forEach(function(product, index) { %>
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col">
+          <div class="h-24 bg-[<%= product.bgcolor %>] flex items-center justify-center overflow-hidden">
+            <img
+              class="w-full max-h-24 object-contain"
+              src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+              alt="<%= product.name %>"
+            />
+          </div>
+          <div class="p-2 bg-[<%= product.panelcolor %>] flex flex-col justify-between">
+            <h3 class="text-sm font-semibold text-[<%= product.textcolor %>] truncate">
+              <%= product.name %>
+            </h3>
+            <div class="flex justify-between items-center mt-1">
+              <form action="/users/cart/product/delete/<%= index %>" method="POST">
+                <button type="submit" class="text-white hover:text-red-500">
+                  Delete
+                </button>
+              </form>
+              <h4 class="text-sm font-semibold text-[<%= product.textcolor %>]">
+                <% if (product.price !== product.discount) { %>
+                  <span class="line-through">₹ <%= product.price %></span>
+                  <span class="ml-2">₹ <%= product.discount %></span>
+                <% } else { %>
+                  <span>₹ <%= product.price %></span>
+                <% } %>
+              </h4>
             </div>
-            <% }) %>
           </div>
         </div>
+      <% }) %>
+    </div>
+  </div>
 
-        <div class="w-full lg:w-1/3 mt-6 lg:mt-10">
-          <div class="bg-white rounded-lg shadow-md p-4 top-4">
-            <h3 class="text-xl font-bold mb-4 text-gray-800">Order Summary</h3>
-            <div class="space-y-2 text-sm">
-              <% 
-                let totalMRP = 0; 
-                let totalDiscount = 0; 
-                user.cart.forEach(function(product) { 
-                  totalMRP += product.price; 
-                  if (product.discount && product.price > product.discount) {
-                    totalDiscount += product.price - product.discount;
-                  }
-                }); 
-              %>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Subtotal</span>
-                <span class="font-medium">
-                  ₹<%= totalMRP.toLocaleString('en-IN') %>
-                </span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Discount</span>
-                <span class="font-medium text-green-600">
-                  -₹<%= totalDiscount.toLocaleString('en-IN') %>
-                </span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Platform Fee</span>
-                <span class="font-medium">₹20</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Shipping</span>
-                <span class="font-medium text-green-600">FREE</span>
-              </div>
-              <div class="border-t pt-2 mt-2">
-                <div class="flex justify-between items-center">
-                  <span class="font-semibold text-gray-800">Total</span>
-                  <span class="text-lg font-bold text-green-600">
-                    ₹<%= (totalMRP - totalDiscount + 20).toLocaleString('en-IN') %>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <form action="/users/checkout" method="get" class="mt-4">
-              <label for="address" class="block text-gray-800 font-medium mb-2">
-                Select Delivery Address
-              </label>
-              <% if (user.addresses.length > 0) { %>
-                <select
-                  name="selectedAddress"
-                  id="address"
-                  class="w-full border-gray-300 rounded-lg p-2"
-                  required
-                >
-                  <% user.addresses.forEach(function(address, index) { %>
-                    <option value="<%= index %>">
-                      <%= address.street %>, <%= address.city %>, <%= address.zip %>
-                    </option>
-                  <% }) %>
-                </select>     <button
-                type="submit"
-                class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg mt-4 text-sm hover:bg-blue-700 transition-colors"
-              >
-                Proceed to Checkout
-              </button>
-              <% } else { %>
-                <div class="text-gray-600">
-                  No delivery addresses available. 
-                  <a 
-                    href="/users/account/address" 
-                     class="w-full bg-blue-600 text-white font-semibold p-2 rounded-lg mt-4 text-sm hover:bg-blue-700 transition-colors">
-                    Add an Address
-                  </a>
-                </div>
-              <% } %>
-            </form>
+  <!-- Order Summary -->
+  <div class="w-full">
+    <div class="bg-white rounded-lg shadow-md p-4">
+      <h3 class="text-xl font-bold mb-4 text-gray-800">Order Summary</h3>
+      <div class="space-y-2 text-sm">
+        <% 
+          let totalMRP = 0; 
+          let totalDiscount = 0; 
+          user.cart.forEach(function(product) { 
+            totalMRP += product.price; 
+            if (product.discount && product.price > product.discount) {
+              totalDiscount += product.price - product.discount;
+            }
+          }); 
+        %>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Subtotal</span>
+          <span class="font-medium">₹<%= totalMRP.toLocaleString('en-IN') %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Discount</span>
+          <span class="font-medium text-green-600">-₹<%= totalDiscount.toLocaleString('en-IN') %></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Platform Fee</span>
+          <span class="font-medium">₹20</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Shipping</span>
+          <span class="font-medium text-green-600">FREE</span>
+        </div>
+        <div class="border-t pt-2 mt-2">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-gray-800">Total</span>
+            <span class="text-lg font-bold text-green-600">
+              ₹<%= (totalMRP - totalDiscount + 20).toLocaleString('en-IN') %>
+            </span>
           </div>
         </div>
       </div>
-      <% } %>
-    </div>
 
-    <%- include('./partials/footer') %>
-  </body>
+      <!-- Checkout Section -->
+      <form action="/users/checkout" method="get" class="mt-4">
+        <label for="address" class="block text-gray-800 font-medium mb-2">
+          Select Delivery Address
+        </label>
+        <% if (user.addresses.length > 0) { %>
+          <select
+            name="selectedAddress"
+            id="address"
+            class="w-full border-gray-300 rounded-lg p-2"
+            required
+          >
+            <% user.addresses.forEach(function(address, index) { %>
+              <option value="<%= index %>">
+                <%= address.street %>, <%= address.city %>, <%= address.zip %>
+              </option>
+            <% }) %>
+          </select>
+          <button
+            type="submit"
+            class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-4 text-base hover:bg-blue-700 transition-colors"
+          >
+            Proceed to Checkout
+          </button>
+        <% } else { %>
+          <div class="text-gray-600">
+            No delivery addresses available. 
+            <a 
+              href="/users/account/address" 
+              class="block w-full text-center bg-blue-600 text-white font-semibold py-3 rounded-lg mt-4 text-base hover:bg-blue-700 transition-colors"
+            >
+              Add an Address
+            </a>
+          </div>
+        <% } %>
+      </form>
+    </div>
+  </div>
+</div>
+    <% } %>
+  </div>
+  <%- include('./partials/footer') %>
+</body>
 </html>
