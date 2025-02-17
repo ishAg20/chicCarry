@@ -32,11 +32,22 @@
         Welcome to <span class="text-blue-400 font-semibold">chicCarry</span>
       </h3>
       <h4 class="text-lg md:text-2xl mb-5">Create your account</h4>
-      <form autocomplete="off" action="/users/register" method="post">
-        <input class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="text" placeholder="Full Name" name="fullname" />
-        <input class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="email" placeholder="Email" name="email" />
-        <input class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="password" placeholder="Password" name="password" />
-        <input class="w-full md:w-auto px-5 rounded-full py-3 mt-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors" type="submit" value="Create My Account" />
+      <form id="register-form" autocomplete="off" onsubmit="handleRegistration(event)">
+        <input class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="text" placeholder="Full Name" name="fullname" id="fullname" required />
+        <input id="email" class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="email" placeholder="Email" name="email" required />
+        <button type="button" id="send-otp" class="w-full md:w-auto px-5 rounded-full py-2 bg-yellow-500 text-white hover:bg-yellow-600 transition-colors">
+          Send OTP
+        </button>
+      
+        <div id="otp-section" class="hidden">
+          <input id="otp" class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md my-3" type="text" placeholder="Enter OTP" name="otp" required />
+        </div>
+      
+        <input id="password" class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="password" placeholder="Password" name="password" required />
+      
+        <button id="register-btn" class="w-full md:w-auto px-5 rounded-full py-3 mt-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors hidden" type="submit">
+          Create My Account
+        </button>
       </form>
     </div>
   </div>
@@ -53,5 +64,72 @@
     </div>
   </div>
 </div>
+<script>
+  document.getElementById("send-otp").addEventListener("click", async () => {
+    const email = document.getElementById("email").value;
+    if (!email) {
+      alert("Please enter your email first.");
+      return;
+    }
+  
+    try { console.log('Sending request to /users/send-otp with email:', email);
+      const response = await fetch("/users/send-otp", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+        body: JSON.stringify({ email })
+      });   console.log('Response status:', response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
+      const data = await response.json();
+      console.log('Response data:', data);
+      
+      if (data.success) {
+      alert(data.message);
+      document.getElementById("otp-section").classList.remove("hidden");
+      document.getElementById("register-btn").classList.remove("hidden");
+      document.getElementById("send-otp").disabled = true;
+      document.getElementById("send-otp").classList.add("opacity-50");
+    } else {
+      alert(data.message || "Failed to send OTP. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred while sending OTP. Please try again.");
+  }
+});
+  
+  async function handleRegistration(event) {
+    event.preventDefault();
+    
+    const formData = {
+      fullname: document.getElementById("fullname").value,
+      email: document.getElementById("email").value,
+      otp: document.getElementById("otp").value,
+      password: document.getElementById("password").value
+    };
+  
+    try {
+      const response = await fetch("/users/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+  
+      const data = await response.json();
+      alert(data.message);
+      
+      if (data.success) {
+        window.location.href = "/users/products";
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred during registration. Please try again.");
+    }
+  }
+  </script>
 <%- include('./partials/footer') %>

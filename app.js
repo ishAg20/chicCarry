@@ -37,6 +37,14 @@ app.use((req, res, next) => {
   req.session.error = "";
   next();
 });
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  if (req.xhr || req.headers.accept.includes("application/json")) {
+    res.status(500).json({ success: false, message: "Something went wrong!" });
+  } else {
+    res.status(500).render("error", { error: "Something went wrong!" });
+  }
+});
 
 // Routes setup
 app.use("/", index);

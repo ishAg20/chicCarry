@@ -1,13 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const { registerUser } = require("../controllers/authController.js");
-const { loggedInUser } = require("../controllers/authController.js");
-const { loggedOut } = require("../controllers/authController.js");
+const {
+  registerUser,
+  loggedInUser,
+  loggedOut,
+  sendOTP,
+  verifyOTP,
+} = require("../controllers/authController.js");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 const productModel = require("../models/product-model");
 const userModel = require("../models/user-model");
 
+router.use(express.json());
+
 router.post("/register", registerUser);
+router.post("/send-otp", sendOTP);
+router.post("/verify-otp", verifyOTP);
 
 router.post("/login", loggedInUser);
 
