@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+require("dotenv").config();
 const {
   registerUser,
   loggedInUser,
@@ -10,6 +11,7 @@ const {
 const isLoggedIn = require("../middlewares/isLoggedIn");
 const productModel = require("../models/product-model");
 const userModel = require("../models/user-model");
+const nodemailer = require("nodemailer");
 
 router.use(express.json());
 
@@ -121,12 +123,45 @@ router.get("/checkout", isLoggedIn, async (req, res) => {
       total: finalTotal,
       items,
     };
+    const orderedItems = user.cart.map((product) => {
+      return `Product: ${product.name}, Price: Rs. ${product.price}, Quantity: 1`;
+    });
+
     user.orders.push(newOrder);
     user.cart = [];
     await user.save();
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
+    // Email content
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: `Order Confirmation - ${orderId}`,
+      text: `Dear ${
+        user.fullname.split(" ")[0] || "Customer"
+      },\n\nThank you for your order. Your order ID is ${orderId}.\nTotal: Rs. ${finalTotal}\n\nItems ordered:\n${orderedItems.join(
+        "\n\n"
+      )}\n\nWe will notify you once your order has been shipped.\n\nBest regards,\nThe chicCarry Team`,
+    };
+
+    // Send email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending email:", error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
     res.render("account", {
       user,
+      message:
+        "Your order has been placed. Please check your email for confirmation.",
     });
   } catch (error) {
     console.error("Error during checkout:", error);
