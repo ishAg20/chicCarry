@@ -35,7 +35,12 @@
       <form id="register-form" autocomplete="off" onsubmit="handleRegistration(event)">
         <input class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="text" placeholder="Full Name" name="fullname" id="fullname" required />
         <input id="email" class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="email" placeholder="Email" name="email" required />
-        <button type="button" id="send-otp" class="w-full md:w-auto px-5 rounded-full py-2 bg-yellow-500 text-white hover:bg-yellow-600 transition-colors">
+        <button
+  type="button"
+  id="send-otp"
+  class="px-4 py-2 mb-2 rounded-full bg-yellow-500 text-white hover:bg-yellow-600 transition-colors w-auto md:px-5 md:w-auto"
+>
+
           Send OTP
         </button>
       
@@ -45,7 +50,7 @@
       
         <input id="password" class="bg-zinc-100 block w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="password" placeholder="Password" name="password" required />
       
-        <button id="register-btn" class="w-full md:w-auto px-5 rounded-full py-3 mt-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors hidden" type="submit">
+        <button id="register-btn" class="px-4 py-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors w-auto md:px-5 md:w-auto hidden " type="submit">
           Create My Account
         </button>
       </form>
@@ -59,7 +64,7 @@
       <form autocomplete="off" action="/users/login" method="post">
         <input class="block bg-zinc-100 w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="email" placeholder="Email" name="email" />
         <input class="block bg-zinc-100 w-full px-3 py-2 border border-zinc-200 rounded-md mb-3" type="password" placeholder="Password" name="password" />
-        <input class="w-full md:w-auto px-5 block rounded-full py-3 mt-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors" type="submit" value="Login" />
+        <input class="px-4 py-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors w-auto md:px-5 md:w-auto  "  type="submit" value="Login" />
       </form>
     </div>
   </div>
