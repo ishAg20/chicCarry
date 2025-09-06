@@ -1,6 +1,6 @@
-# ChicCarry
+# chicCarry
 
-ChicCarry is a full-featured eCommerce web platform designed for seamless online shopping experiences. It features user authentication, order management, product filtering, and responsive UI optimized for devices of all sizes.
+chicCarry is a full-featured eCommerce web platform designed for seamless online shopping experiences. It features user authentication, order management, product filtering, and responsive UI optimized for devices of all sizes.
 
 ## Demo
 
